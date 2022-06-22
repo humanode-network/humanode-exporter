@@ -2,10 +2,10 @@ import express from "express";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { register, Gauge, collectDefaultMetrics } from "prom-client";
 
-const { SUBSTRATE_URL } = process.env;
+const { RPC_URL, PORT = 3000 } = process.env;
 
-if (!SUBSTRATE_URL) {
-  throw new Error("No provided SUBSTRATE_URL");
+if (!RPC_URL) {
+  throw new Error("No provided RPC_URL");
 }
 
 collectDefaultMetrics({ prefix: "humanode_state_" });
@@ -32,6 +32,6 @@ app.get("/metrics", async (_req, res) => {
   }
 });
 
-const provider = new WsProvider();
+const provider = new WsProvider(RPC_URL);
 api = await ApiPromise.create({ provider });
-app.listen(4001, "0.0.0.0");
+app.listen(Number(PORT), "0.0.0.0");

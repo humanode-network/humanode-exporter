@@ -20,7 +20,6 @@ COPY --from=builder /src/node_modules ./node_modules
 
 RUN ls -al
 
-EXPOSE 3000
 STOPSIGNAL SIGTERM
 
 CMD ["node", "index.js"]
