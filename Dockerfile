@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:16 AS builder
 
 WORKDIR /src
 
@@ -9,6 +9,18 @@ RUN yarn install
 
 COPY . .
 RUN yarn build
-EXPOSE 3000
 
-CMD ["yarn", "start"]
+FROM node:16
+
+WORKDIR /app
+
+COPY --from=builder /src/package.json ./
+COPY --from=builder /src/build ./
+COPY --from=builder /src/node_modules ./node_modules
+
+RUN ls -al
+
+EXPOSE 3000
+STOPSIGNAL SIGTERM
+
+CMD ["node", "index.js"]
