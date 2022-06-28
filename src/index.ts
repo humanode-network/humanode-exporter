@@ -19,6 +19,15 @@ new Gauge({
   },
 });
 
+new Gauge({
+  name: "humanode_rpc_last_block_extrinsics_count",
+  help: "total number of extrinsics in the best block",
+  async collect() {
+    const block = await api.rpc.chain.getBlock();
+    this.set(block.block.extrinsics.length);
+  },
+});
+
 let api: ApiPromise;
 let app = express();
 
