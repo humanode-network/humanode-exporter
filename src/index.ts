@@ -8,7 +8,7 @@ if (!RPC_URL) {
   throw new Error("No provided RPC_URL");
 }
 
-collectDefaultMetrics({ prefix: "humanode_state_" });
+collectDefaultMetrics({ prefix: "humanode_exporter_" });
 
 new Gauge({
   name: "humanode_state_session_validators_count",
