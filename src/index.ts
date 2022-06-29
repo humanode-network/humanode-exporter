@@ -1,6 +1,9 @@
 import express from "express";
-import { ApiPromise, WsProvider } from "@polkadot/api";
-import { register, Gauge, collectDefaultMetrics } from "prom-client";
+import { ApiPromise } from "@polkadot/api/promise";
+import { WsProvider } from "@polkadot/rpc-provider/ws";
+import { collectDefaultMetrics } from "prom-client";
+import registerMetrics from "./registerMetrics.js";
+import routes from "./routes.js";
 
 const { RPC_URL, PORT = 3000 } = process.env;
 
@@ -10,37 +13,11 @@ if (!RPC_URL) {
 
 collectDefaultMetrics({ prefix: "humanode_exporter_" });
 
-new Gauge({
-  name: "humanode_state_session_validators_count",
-  help: "count of session validators",
-  async collect() {
-    const validators = await api.query.session.validators();
-    this.set((validators.toJSON() as string[]).length);
-  },
-});
-
-new Gauge({
-  name: "humanode_rpc_last_block_extrinsics_count",
-  help: "total number of extrinsics in the best block",
-  async collect() {
-    const block = await api.rpc.chain.getBlock();
-    this.set(block.block.extrinsics.length);
-  },
-});
-
-let api: ApiPromise;
-let app = express();
-
-app.get("/metrics", async (_req, res) => {
-  try {
-    res.set("Content-Type", register.contentType);
-
-    res.end(await register.metrics());
-  } catch (err) {
-    res.status(500).end("" + err);
-  }
-});
+const app = express();
+app.use(routes);
 
 const provider = new WsProvider(RPC_URL);
-api = await ApiPromise.create({ provider });
+const api = await ApiPromise.create({ provider });
+registerMetrics(api);
+
 app.listen(Number(PORT), "0.0.0.0");
