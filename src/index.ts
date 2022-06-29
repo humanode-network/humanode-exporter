@@ -3,7 +3,7 @@ import { ApiPromise } from "@polkadot/api/promise";
 import { WsProvider } from "@polkadot/rpc-provider/ws";
 import { collectDefaultMetrics } from "prom-client";
 import registerMetrics from "./registerMetrics.js";
-import bindRoute from "./bindRoute.js";
+import routes from "./routes.js";
 
 const { RPC_URL, PORT = 3000 } = process.env;
 
@@ -14,7 +14,7 @@ if (!RPC_URL) {
 collectDefaultMetrics({ prefix: "humanode_exporter_" });
 
 const app = express();
-bindRoute(app);
+app.use(routes);
 
 const provider = new WsProvider(RPC_URL);
 const api = await ApiPromise.create({ provider });
