@@ -19,4 +19,22 @@ export default (api: ApiPromise) => {
       this.set(block.block.extrinsics.length);
     },
   });
+
+  new Gauge({
+    name: "humanode_rpc_transactions_per_second",
+    help: "transactions per second based on last 2 blocks",
+    async collect() {
+      const lastBlock = await api.rpc.chain.getBlock();
+      const prevBlock = await api.rpc.chain.getBlock(lastBlock.block.header.parentHash);
+
+      const timestampInLastBlock = parseInt(lastBlock.block.extrinsics[0].method.args[0].toString());
+      const timestampInPrevBlock = parseInt(prevBlock.block.extrinsics[0].method.args[0].toString());
+
+      const extrinsicsInLastBlock = lastBlock.block.extrinsics.length;
+      const gapInSeconds = (timestampInLastBlock - timestampInPrevBlock) / 1000;
+      const tps = extrinsicsInLastBlock / gapInSeconds;
+
+      this.set(tps);
+    },
+  });
 };
