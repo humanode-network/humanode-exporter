@@ -1,4 +1,4 @@
-import { ApiPromise } from "@polkadot/api/promise";
+import { ApiPromise } from "@polkadot/api";
 import { Gauge } from "prom-client";
 
 export default (api: ApiPromise) => {
