@@ -1,5 +1,5 @@
 {
-  "name": "humanode-state-exporter",
+  "name": "humanode-exporter",
   "version": "0.0.1",
   "private": true,
   "type": "module",
