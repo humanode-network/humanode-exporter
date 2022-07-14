@@ -13,6 +13,18 @@ export default (api: ApiPromise) => {
     });
   }
 
+  if (typeof api?.query?.bioauth?.activeAuthentications === "function") {
+    new Gauge({
+      name: "humanode_state_bioauth_active_authentications_count",
+      help: "count of bioauth active authentications",
+      async collect() {
+        const activeAuthentications =
+          await api.query.bioauth.activeAuthentications();
+        this.set((activeAuthentications.toJSON() as string[]).length);
+      },
+    });
+  }
+
   if (typeof api?.rpc?.chain?.getBlock === "function") {
     new Gauge({
       name: "humanode_rpc_last_block_extrinsics_count",
