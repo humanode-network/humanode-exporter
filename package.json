@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node build/index.js",
     "build": "tsc -p .",
-    "dev": "RPC_URL=ws://localhost:9944 ts-node src/index.ts"
+    "dev": "ts-node src/index.ts"
   },
   "packageManager": "yarn@3.2.0",
   "dependencies": {
