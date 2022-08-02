@@ -5,11 +5,16 @@ const router = Router();
 
 router.get("/metrics", async (_req, res) => {
   try {
+    const data = await register.metrics();
     res.set("Content-Type", register.contentType);
-
-    res.end(await register.metrics());
+    res.end(data);
   } catch (err) {
-    res.status(500).end("" + err);
+    if (err instanceof Error) {
+      const body = err.stack?.toString() || err.toString();
+      res.status(500).end(body);
+      return;
+    }
+    res.status(500).end(`${err}`);
   }
 });
 
