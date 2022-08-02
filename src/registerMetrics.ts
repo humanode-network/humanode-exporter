@@ -41,8 +41,8 @@ export default (api: ApiPromise) => {
       name: "humanode_state_session_next_keys_count",
       help: "count of the session keys to use in the next session",
       async collect() {
-        const nextKeys = await api.query.session.nextKeys();
-        this.set((nextKeys.toJSON() as unknown[]).length);
+        const nextKeys = await api.query.session.nextKeys.entries();
+        this.set(nextKeys.length);
       },
     });
   }
@@ -52,8 +52,8 @@ export default (api: ApiPromise) => {
       name: "humanode_state_offences_reports_count",
       help: "count of the offence reports",
       async collect() {
-        const reports = await api.query.offences.reports();
-        this.set((reports.toJSON() as unknown[]).length);
+        const reports = await api.query.offences.reports.entries();
+        this.set(reports.length);
       },
     });
   }
