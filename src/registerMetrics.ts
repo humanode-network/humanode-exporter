@@ -35,4 +35,15 @@ export default (api: ApiPromise) => {
       },
     });
   }
+
+  if (typeof api?.query?.session?.nextKeys === "function") {
+    new Gauge({
+      name: "humanode_state_session_next_keys_count",
+      help: "count of the session keys to use in the next session",
+      async collect() {
+        const nextKeys = await api.query.session.nextKeys();
+        this.set((nextKeys.toJSON() as unknown[]).length);
+      },
+    });
+  }
 };
