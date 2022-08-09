@@ -25,6 +25,18 @@ export default (api: ApiPromise) => {
     });
   }
 
+  if (typeof api?.query?.bioauth?.consumedAuthTicketNonces === "function") {
+    new Gauge({
+      name: "humanode_state_bioauth_consumed_auth_ticket_nonces_count",
+      help: "count of consumed auth ticket nonces",
+      async collect() {
+        const consumedAuthTicketNonces =
+          await api.query.bioauth.consumedAuthTicketNonces();
+        this.set((consumedAuthTicketNonces.toJSON() as string[]).length);
+      },
+    });
+  }
+
   if (typeof api?.rpc?.chain?.getBlock === "function") {
     new Gauge({
       name: "humanode_rpc_last_block_extrinsics_count",
