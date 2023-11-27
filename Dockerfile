@@ -1,4 +1,4 @@
-FROM node:16 AS builder
+FROM node:18 AS builder
 
 WORKDIR /src
 
@@ -10,7 +10,7 @@ RUN yarn install
 COPY . .
 RUN yarn build
 
-FROM node:16
+FROM node:18
 
 WORKDIR /app
 
