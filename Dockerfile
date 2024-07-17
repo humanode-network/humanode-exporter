@@ -1,4 +1,8 @@
-FROM node:20 AS builder
+FROM node:20 AS base
+
+RUN corepack enable
+
+FROM base AS builder
 
 WORKDIR /src
 
@@ -10,7 +14,7 @@ RUN yarn install
 COPY . .
 RUN yarn build
 
-FROM node:20
+FROM base
 
 WORKDIR /app
 
