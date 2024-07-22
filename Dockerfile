@@ -1,16 +1,20 @@
-FROM node:18 AS builder
+FROM node:20-bookworm-slim AS base
+
+RUN corepack enable
+
+FROM base AS builder
 
 WORKDIR /src
 
-COPY package*.json ./
-COPY yarn.lock ./
+COPY package.json yarn.lock .yarnrc.yml ./
+COPY .yarn .yarn
 
-RUN yarn install
+RUN yarn install --immutable --immutable-cache
 
 COPY . .
 RUN yarn build
 
-FROM node:18
+FROM base
 
 WORKDIR /app
 
