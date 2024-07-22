@@ -6,7 +6,8 @@ FROM base AS builder
 
 WORKDIR /src
 
-COPY package.json yarn.lock .yarn ./
+COPY package.json yarn.lock ./
+COPY .yarn .yarn
 
 RUN yarn install --immutable --immutable-cache
 
