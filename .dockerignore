@@ -4,4 +4,5 @@
 !.yarn
 !package.json
 !yarn.lock
+!.yarnrc.yml
 !tsconfig.json
