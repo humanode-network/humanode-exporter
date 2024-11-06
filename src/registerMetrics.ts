@@ -1,6 +1,6 @@
 import { ApiPromise } from "@polkadot/api";
 import { Gauge } from "prom-client";
-import { countPaginated } from "./utils";
+import { countPaginated } from "./utils.js";
 
 export default (api: ApiPromise) => {
   if (typeof api?.query?.session?.validators === "function") {
