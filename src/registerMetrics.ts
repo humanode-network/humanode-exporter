@@ -1,5 +1,6 @@
 import { ApiPromise } from "@polkadot/api";
 import { Gauge } from "prom-client";
+import { countPaginated } from "./utils";
 
 export default (api: ApiPromise) => {
   if (typeof api?.query?.session?.validators === "function") {
@@ -53,8 +54,14 @@ export default (api: ApiPromise) => {
       name: "humanode_state_session_next_keys_count",
       help: "count of the session keys to use in the next session",
       async collect() {
-        const nextKeys = await api.query.session.nextKeys.entries();
-        this.set(nextKeys.length);
+        const count = await countPaginated((startKey) =>
+          api.query.session.nextKeys.keysPaged({
+            args: [],
+            pageSize: 1000,
+            startKey,
+          })
+        );
+        this.set(count);
       },
     });
   }
@@ -64,8 +71,14 @@ export default (api: ApiPromise) => {
       name: "humanode_state_offences_reports_count",
       help: "count of the offence reports",
       async collect() {
-        const reports = await api.query.offences.reports.entries();
-        this.set(reports.length);
+        const count = await countPaginated((startKey) =>
+          api.query.offences.reports.keysPaged({
+            args: [],
+            pageSize: 1000,
+            startKey,
+          })
+        );
+        this.set(count);
       },
     });
   }
