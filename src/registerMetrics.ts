@@ -66,6 +66,23 @@ export default (api: ApiPromise) => {
     });
   }
 
+  if (typeof api?.query?.offences?.reports === "function") {
+    new Gauge({
+      name: "humanode_state_offences_reports_count",
+      help: "count of the offence reports",
+      async collect() {
+        const count = await countPaginated((startKey) =>
+          api.query.offences.reports.keysPaged({
+            args: [],
+            pageSize: 1000,
+            startKey,
+          })
+        );
+        this.set(count);
+      },
+    });
+  }
+
   if (typeof api?.query?.humanodeOffences?.total === "function") {
     new Gauge({
       name: "humanode_state_humanode_offences_total",
