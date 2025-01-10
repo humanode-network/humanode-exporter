@@ -82,4 +82,15 @@ export default (api: ApiPromise) => {
       },
     });
   }
+
+  if (typeof api?.query?.humanodeOffences?.total === "function") {
+    new Gauge({
+      name: "humanode_state_humanode_offences_total",
+      help: "count of the humanode offences",
+      async collect() {
+        const count = await api.query.humanodeOffences.total();
+        this.set(count.toPrimitive() as number);
+      },
+    });
+  }
 };
