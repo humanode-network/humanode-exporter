@@ -1,4 +1,5 @@
 import { ApiPromise } from "@polkadot/api";
+import { u64, Option } from "@polkadot/types";
 import { Gauge } from "prom-client";
 import { countPaginated } from "./utils.js";
 
@@ -88,8 +89,13 @@ export default (api: ApiPromise) => {
       name: "humanode_state_humanode_offences_total",
       help: "count of the humanode offences",
       async collect() {
-        const count = await api.query.humanodeOffences.total();
-        this.set(count.toPrimitive() as number);
+        const maybeCount = await api.query.humanodeOffences.total<
+          Option<u64>
+        >();
+        if (maybeCount.isSome) {
+          const count = maybeCount.value;
+          this.set(count.toNumber());
+        }
       },
     });
   }
