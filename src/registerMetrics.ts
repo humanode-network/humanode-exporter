@@ -1,5 +1,5 @@
 import { ApiPromise } from "@polkadot/api";
-import { u64, Option } from "@polkadot/types";
+import { u64, Option, Vec } from "@polkadot/types";
 import { Gauge } from "prom-client";
 import { countPaginated } from "./utils.js";
 
@@ -9,8 +9,8 @@ export default (api: ApiPromise) => {
       name: "humanode_state_session_validators_count",
       help: "count of session validators",
       async collect() {
-        const validators = await api.query.session.validators();
-        this.set((validators.toJSON() as string[]).length);
+        const validators = await api.query.session.validators<Vec<any>>();
+        this.set(validators.length);
       },
     });
   }
@@ -21,8 +21,8 @@ export default (api: ApiPromise) => {
       help: "count of bioauth active authentications",
       async collect() {
         const activeAuthentications =
-          await api.query.bioauth.activeAuthentications();
-        this.set((activeAuthentications.toJSON() as string[]).length);
+          await api.query.bioauth.activeAuthentications<Vec<any>>();
+        this.set(activeAuthentications.length);
       },
     });
   }
@@ -33,8 +33,8 @@ export default (api: ApiPromise) => {
       help: "count of consumed auth ticket nonces",
       async collect() {
         const consumedAuthTicketNonces =
-          await api.query.bioauth.consumedAuthTicketNonces();
-        this.set((consumedAuthTicketNonces.toJSON() as string[]).length);
+          await api.query.bioauth.consumedAuthTicketNonces<Vec<any>>();
+        this.set(consumedAuthTicketNonces.length);
       },
     });
   }
