@@ -89,7 +89,7 @@ export default (api: ApiPromise) => {
       help: "count of the humanode offences",
       async collect() {
         const count = await api.query.humanodeOffences.total();
-        this.set(count.toJSON() as number);
+        this.set(count.toPrimitive() as number);
       },
     });
   }
